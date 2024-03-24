@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from re import findall
 
 import scrapy
@@ -49,10 +49,12 @@ class ValeGazetteSpider(BaseGazetteSpider):
         gazettes = response.css(".ant-list-item")
 
         for gazette in gazettes:
-            file_url = gazette.css("a ::attr(href)").get()
-            edition_number = gazette.css(".edition-number ::text").get()
             gazette_date = self._get_gazette_date(gazette)
-            is_extra_edition = "Extra" in edition_number
+            file_url = gazette.css("a ::attr(href)").get()
+            edition_text = ''.join(
+                gazette.css(".edition-number ::text").getall())
+            edition_number = findall(r'(\d+)', edition_text)[0]
+            is_extra_edition = "Extra" in edition_text
 
             yield Gazette(
                 date=gazette_date,
