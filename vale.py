@@ -58,7 +58,7 @@ class ValeGazetteSpider(BaseGazetteSpider):
 
             yield Gazette(
                 date=gazette_date,
-                file_url=[file_url],
+                file_urls=[file_url],
                 edition_number=edition_number,
                 is_extra_edition=is_extra_edition,
                 power="executive",
@@ -70,4 +70,3 @@ class ValeGazetteSpider(BaseGazetteSpider):
             current_page = findall("/(\d+)", response.url)[0]
             next_page = int(current_page) + 1
             yield scrapy.Request(self._get_url(page=next_page), callback=self.parse)
-            
